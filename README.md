@@ -1,150 +1,159 @@
-# if (dark) lamp = ON;
+<div align="center">
 
-> A minimalist smart lamp that decides when you need light — without cloud, WiFi, or nonsense.
+# 👁️ The Sentient Lamp
+### A Smart Ambient Light System with Personality
+
+![Project Banner](media/banner_placeholder.jpg)
+[![Arduino](https://img.shields.io/badge/Platform-Arduino-00979D?style=for-the-badge&logo=arduino)](https://www.arduino.cc/)
+[![C++](https://img.shields.io/badge/Language-C++-00599C?style=for-the-badge&logo=c%2B%2B)](https://isocpp.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+
+> *"A minimalist smart lamp that decides when you need light — without cloud, WiFi, or nonsense."*
+
+[View Demo Video](media/demo_video.mp4) • [Report Bug](https://github.com/yourusername/repo/issues)
+
+</div>
 
 ---
 
 ## 🧠 Overview
 
-This project is an **Arduino-based smart ambient lamp** that automatically turns ON in darkness and OFF in brightness using a **Light Dependent Resistor (LDR)**.
+**This isn't just a lamp.** It's an Arduino-based embedded system that "lives" on your desk. Using a **Light Dependent Resistor (LDR)** and a **Finite State Machine (FSM)** core, it autonomously manages your lighting based on ambient conditions.
 
-It features:
-- Automatic & Manual modes
-- Finite State Machine (FSM) based logic
-- Hysteresis for stable sensor behavior
-- Non-blocking timing (no `delay()` abuse)
-- OLED UI with live sensor feedback
-- Audible feedback via buzzer
+But unlike boring sensors, this one looks back at you. It features a **procedurally animated OLED face** that reacts to the environment—getting "sleepy" when it's bright and "wide awake" when it detects darkness.
 
-Designed as a **first serious hardware project** with clean architecture and polished UX.
+### Key Capabilities
+* **👁️ Procedural Animation:** Realistic blinking and eye movement (no static bitmaps).
+* **🌗 Auto-Day/Night Cycles:** Automatic switching with hysteresis thresholds.
+* **🕹️ Manual Override:** Force the system ON or OFF with a tactical button press.
+* **⚡ Non-Blocking Core:** zero `delay()` usage ensures smooth animations at 30+ FPS.
 
 ---
 
-## ✨ Features
+## 📸 Gallery
 
-- 🌗 **Automatic light control** using ambient brightness
-- 🔘 **Manual override button**
-- 🧠 **Finite State Machine (FSM)** for predictable behavior
-- 🛑 **Hysteresis** to avoid flickering near thresholds
-- 📊 **Live LDR bar graph** on OLED
-- 🔔 **Event-based buzzer feedback**
-- 🚫 **No delay() blocking**
-- 💡 **Clean OLED UI (no flicker)**
+| **Day Mode (Auto Off)** | **Night Mode (Auto On)** | **Manual Override** |
+|:---:|:---:|:---:|
+| ![Lazy Eyes](image_897c90.jpg) | ![Awake Eyes](image_897c8a.jpg) | ![Manual UI](media/manual_ui.jpg) |
+| *System sleeps. Eyes heavy. Light OFF.* | *System alert. Eyes wide. Light ON.* | *Forced control. Tactical UI.* |
 
 ---
 
-## 🧠 System States (FSM)
+## ⚙️ How It Works (The Logic)
 
-| State | Description |
-|-----|------------|
-| `AUTO_BRIGHT_OFF` | Bright environment → Lamp OFF |
-| `AUTO_DARK_ON` | Dark environment → Lamp ON |
-| `FORCE_ON` | Manual override → Lamp forced ON |
-| `FORCE_OFF` | Manual override → Lamp forced OFF |
+The system relies on a **Finite State Machine (FSM)** to prevent erratic behavior. It uses **Hysteresis** to create a stable "dead zone" between light and dark, preventing the lamp from flickering at twilight.
 
-Transitions occur via:
-- LDR threshold crossing (AUTO mode)
-- Button press (Manual override)
+### State Diagram
 
----
+```mermaid
+stateDiagram-v2
+    [*] --> AUTO_BRIGHT_OFF
+    
+    AUTO_BRIGHT_OFF --> AUTO_DARK_ON : Sensor > 750 (Dark)
+    AUTO_DARK_ON --> AUTO_BRIGHT_OFF : Sensor < 600 (Bright)
+    
+    AUTO_BRIGHT_OFF --> FORCE_ON : Button Press
+    AUTO_DARK_ON --> FORCE_ON : Button Press
+    
+    FORCE_ON --> FORCE_OFF : Button Press
+    FORCE_OFF --> AUTO_BRIGHT_OFF : Button Press
 
-## 🔌 Hardware Components
+```
 
-| Component | Quantity |
-|---------|----------|
-| Arduino Uno | 1 |
-| LDR Module | 1 |
-| OLED Display (SSD1306) | 1 |
-| LED + Resistor | 1 |
-| Push Button | 1 |
-| Buzzer | 1 |
-| Breadboard + Jumper Wires | — |
+### The "Personality" Engine
 
----
+The OLED doesn't just play a GIF. It calculates physics in real-time:
 
-## 🖥 OLED UI Layout
+1. **Gaze Tracking:** Random vectors determine where the robot looks.
+2. **Blink Logic:** Randomized intervals with smooth eyelid physics.
+3. **Expression Mapping:** * *Lazy/Squinting* = High Ambient Light.
+* *Wide/Alert* = Low Ambient Light.
+* *Dilated Pupils* = Manual Mode Active.
 
-- **Top:** Mode (AUTO / MANUAL)
-- **Center:** Current system state (DARK / LIGHT / ON / OFF)
-- **Bottom:** Real-time LDR bar graph
-- **Flash feedback:** Brief screen inversion on state changes
+
 
 ---
 
-## ⚙️ How It Works
+## 🔌 Hardware Bill of Materials
 
-1. LDR continuously measures ambient light
-2. FSM evaluates state transitions using hysteresis
-3. Lamp output updates based on state
-4. OLED updates **only on change** (no flicker)
-5. Button cycles override modes
-6. Buzzer confirms every state transition
-
----
-
-## 🧪 Why Hysteresis?
-
-Without hysteresis, small light fluctuations cause rapid ON/OFF flicker.
-
-This project uses:
-- `DARK_ON` threshold to turn lamp ON
-- `BRIGHT_OFF` threshold to turn lamp OFF
-
-This creates a **stable dead zone**.
+| Component | Role |
+| --- | --- |
+| **Arduino Uno** | The Brain |
+| **OLED (SSD1306)** | The Face (0.96" I2C) |
+| **LDR Module** | The Eye (Light Sensor) |
+| **LED + 220Ω Res** | The Output (Simulated Lamp) |
+| **Push Button** | User Input |
+| **Piezo Buzzer** | Haptic/Audio Feedback |
 
 ---
 
-## 📂 Project Structure
+## 🧪 Technical Deep Dive
+
+### Why Hysteresis?
+
+Without hysteresis, if the light level hovered exactly at the threshold (e.g., 500), the lamp would strobe ON/OFF rapidly. We solved this by separating the thresholds:
+
+* **Turn ON Point:** > 750 (Very Dark)
+* **Turn OFF Point:** < 600 (Bright)
+* **The Gap (600-750):** The system maintains its *current* state here, ensuring stability.
+
+### File Structure
+
+```bash
 ├── src/
-│ └── smart_lamp.ino
+│   └── smart_lamp_eyes.ino  # Main source code
 ├── docs/
-│ ├── circuit_diagram.png
-│ ├── fsm_diagram.png
+│   ├── circuit_diagram.png  # Wiring schematic
+│   └── logic_flow.pdf       # Detailed FSM docs
 ├── media/
-│ └── demo_video.mp4
-├── README.md
+│   └── demo_video.mp4       # Usage demonstration
+└── README.md
 
-
----
-
-## 🧠 Concepts Used
-
-- Digital & Analog I/O
-- FSM design pattern
-- Hysteresis
-- Non-blocking timing (`millis()`)
-- Embedded UI design
-- Sensor calibration
-- Clean state-based logic
+```
 
 ---
 
-## 🎥 Demo
+## 🚀 Getting Started
 
-📹 *Video demo included in `/media` folder*
+1. **Clone the repo**
+```bash
+git clone [https://github.com/yourusername/smart-lamp.git](https://github.com/yourusername/smart-lamp.git)
+
+```
+
+
+2. **Wiring**
+* LDR → Pin A0
+* Button → Pin 2
+* OLED → SDA/SCL
+* LED → Pin 9
+
+
+3. **Libraries Needed**
+* `Adafruit_GFX`
+* `Adafruit_SSD1306`
+
+
+4. **Upload** via Arduino IDE.
 
 ---
 
-## 🚀 Future Improvements (Optional)
+## 🔮 Future Roadmap
 
-- Ambient dimming (PWM brightness)
-- EEPROM threshold storage
-- Rotary encoder calibration
-- RTC-based night mode
-- Enclosure design
+* [ ] **PWM Dimming:** Instead of ON/OFF, fade the LED based on exact darkness.
+* [ ] **RTC Module:** "Sleep" mode where the robot closes its eyes fully after 11 PM.
+* [ ] **Physical Enclosure:** 3D printed desktop robot body.
 
 ---
 
-## 🏁 Final Note
+<div align="center">
 
-This project intentionally avoids unnecessary complexity (WiFi, apps, cloud).
-It focuses on **robust embedded design fundamentals**.
+### Created by **Souvik Rahut**
 
-> Sometimes the smartest system is the simplest one.
+*Frontend • ML • Embedded Systems*
 
----
+[LinkedIn](https://www.google.com/search?q=https://linkedin.com/in/souvikrahut) • [GitHub](https://www.google.com/search?q=https://github.com/souvikrahut) • [Email](mailto:souvikrahutofficial@gmail.com)
 
-### Author
-**Souvik Rahut**  
-Hardware • Embedded • Curious Engineer
+*"Sometimes the smartest system is the simplest one."*
 
+</div>
