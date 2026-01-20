@@ -34,8 +34,9 @@ But unlike boring sensors, this one looks back at you. It features a **Event-dri
 
 | **Day Mode (Auto Off)** | **Night Mode (Auto On)** | **Manual Sleep (Force Off)** |
 |:---:|:---:|:---:|
-| ![Lazy Eyes](media/day_mode.jpg) | ![Awake Eyes](media/night_mode.jpg) | ![Force Off](media/force_off.jpg)) |
+| <img src="media/day_mode.jpg" alt="Lazy Eyes" width="250"> | <img src="media/night_mode.jpg" alt="Awake Eyes" width="250"> | <img src="media/force_off.jpg" alt="Force Off" width="250"> |
 | *System snoozing. Eyes heavy.* | *System alert. Eyes wide.* | *System Shutdown. Flatline.* |
+
 ---
 
 ## ⚙️ How It Works (The Logic)
