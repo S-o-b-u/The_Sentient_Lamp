@@ -1,9 +1,9 @@
 <div align="center">
 
-# 👁️ The Sentient Lamp
+# The Sentient Lamp
 ### A Smart Ambient Light System with Personality
 
-<img src="media/banner.jpg" alt="Project Banner" width="700">
+<img src="media/banner.jpg" alt="Project Banner" width="1000">
 
 [![Arduino](https://img.shields.io/badge/Platform-Arduino-00979D?style=for-the-badge&logo=arduino)](https://www.arduino.cc/)
 [![C++](https://img.shields.io/badge/Language-C++-00599C?style=for-the-badge&logo=c%2B%2B)](https://isocpp.org/)
@@ -21,7 +21,7 @@
 
 **This isn't just a lamp.** It's an Arduino-based embedded system that "lives" on your desk. Using a **Light Dependent Resistor (LDR)** and a **Finite State Machine (FSM)** core, it autonomously manages your lighting based on ambient conditions.
 
-But unlike boring sensors, this one looks back at you. It features a **procedurally animated OLED face** that reacts to the environment—getting "sleepy" when it's bright and "wide awake" when it detects darkness.
+But unlike boring sensors, this one looks back at you. It features a **Event-driven OLED animations that reflect system state** that reacts to the environment—getting "sleepy" when it's bright and "wide awake" when it detects darkness.
 
 ### Key Capabilities
 * **👁️ Procedural Animation:** Realistic blinking and eye movement (no static bitmaps).
@@ -63,7 +63,7 @@ stateDiagram-v2
 
 ### The "Personality" Engine
 
-The OLED doesn't just play a GIF. It calculates physics in real-time:
+The OLED doesn't just play a GIF. It Uses lightweight logic to simulate eye movement and blinking:
 
 1. **Gaze Tracking:** Random vectors determine where the robot looks.
 2. **Blink Logic:** Randomized intervals with smooth eyelid physics.
@@ -153,7 +153,7 @@ git clone [https://github.com/yourusername/smart-lamp.git](https://github.com/yo
 
 *Frontend • ML • Embedded Systems*
 
-[LinkedIn](https://www.google.com/search?q=https://linkedin.com/in/souvikrahut) • [GitHub](https://www.google.com/search?q=https://github.com/souvikrahut) • [Email](mailto:souvikrahutofficial@gmail.com)
+[LinkedIn](https://www.google.com/search?q=https://linkedin.com/in/souvikrahut) • [GitHub](https://www.google.com/search?q=https://github.com/S-o-b-u) • [Email](mailto:souvikrahutofficial@gmail.com)
 
 *"Sometimes the smartest system is the simplest one."*
 
